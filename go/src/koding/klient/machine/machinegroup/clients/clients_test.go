@@ -10,6 +10,15 @@ import (
 	"golang.org/x/sync/errgroup"
 )
 
+// testOptions returns default Clients options used for testing purposes.
+func testOptions(b machine.ClientBuilder) *ClientsOpts {
+	return &ClientsOpts{
+		Builder:         b,
+		DynAddrInterval: 10 * time.Millisecond,
+		PingInterval:    50 * time.Millisecond,
+	}
+}
+
 func TestClients(t *testing.T) {
 	var (
 		builder = machinetest.NewNilBuilder()
@@ -21,11 +30,7 @@ func TestClients(t *testing.T) {
 		servB = &machinetest.Server{}
 	)
 
-	cs, err := New(&ClientsOpts{
-		Builder:         builder,
-		DynAddrInterval: 10 * time.Millisecond,
-		PingInterval:    50 * time.Millisecond,
-	})
+	cs, err := New(testOptions(builder))
 	if err != nil {
 		t.Fatalf("want err = nil; got %v", err)
 	}
